@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="25dp"
+    tools:context=".RegisterActivity">
+
+    <ImageView
+        android:id="@+id/logoImage"
+        android:layout_width="wrap_content"
+        android:layout_height="199dp"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/background_img_1_a" />
+
+    <TextView
+        android:id="@+id/loginName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" Register "
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"/>
+
+    <EditText
+        android:id="@+id/username"
+        style="@style/EditTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Username"
+        android:textColorHint="@android:color/darker_gray" />
+
+    <EditText
+        android:id="@+id/password"
+        style="@style/EditTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textColorHint="@android:color/darker_gray" />
+
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:layout_marginTop="16dp"
+        style="@style/ButtonStyle" />
+
+    <TextView
+        android:id="@+id/loginPrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Already have an account? Login"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center_horizontal" />
+
+
+</LinearLayout>

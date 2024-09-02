@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editObservationTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Observation Title"
+        android:importantForAccessibility="yes"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp" />
+
+    <EditText
+        android:id="@+id/editObservationDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Observation Details"
+        android:importantForAccessibility="yes"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:minLines="3"
+        android:gravity="top"
+        android:scrollbars="vertical" />
+
+    <EditText
+        android:id="@+id/editObservationDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Date (e.g., 01/01/2024)"
+        android:importantForAccessibility="yes"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp" />
+
+    <EditText
+        android:id="@+id/editObservationLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Location"
+        android:importantForAccessibility="yes"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/dialogCancelButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:layout_weight="1"
+            style="@style/ButtonStyle2"
+            android:padding="16dp"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/dialogSaveButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:layout_weight="1"
+            style="@style/ButtonStyle"
+            android:padding="16dp" />
+    </LinearLayout>
+
+</LinearLayout>

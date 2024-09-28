@@ -8,7 +8,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".SettingsActivity">
+    tools:context=".SettingsActivity"
+    tools:ignore="UseSwitchCompatOrMaterialXml">
 
     <TextView
         android:id="@+id/settingsTitle"
@@ -62,14 +63,13 @@
         android:id="@+id/themeSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dark Theme"
+        android:text="Theme"
         android:padding="12dp"
         app:layout_constraintTop_toBottomOf="@id/maxDistance"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
-        android:minHeight="48dp"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
+        android:minHeight="48dp" />
 
     <Switch
         android:id="@+id/saveLoginSwitch"

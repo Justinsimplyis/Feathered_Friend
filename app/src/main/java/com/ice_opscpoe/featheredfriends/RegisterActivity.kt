@@ -1,6 +1,8 @@
 package com.ice_opscpoe.featheredfriends
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -14,16 +16,18 @@ import androidx.core.view.WindowInsetsCompat
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var username: EditText
-    private lateinit var password:EditText
+    private lateinit var password: EditText
     private lateinit var registerButton: Button
     private lateinit var loginPrompt: TextView
 
     private lateinit var dbHelper: DBHelper
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_register)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -36,26 +40,37 @@ class RegisterActivity : AppCompatActivity() {
         loginPrompt = findViewById(R.id.loginPrompt)
 
         dbHelper = DBHelper(this)
+        sharedPreferences = getSharedPreferences("userPrefs", Context.MODE_PRIVATE)
 
         registerButton.setOnClickListener {
             val usernameText = username.text.toString()
             val passwordText = password.text.toString()
-
 
             if (usernameText.isEmpty() || passwordText.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             } else {
                 dbHelper.addUser(usernameText, passwordText)
                 Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
+
+                // Reset the login choice before navigating to LoginActivity
+                resetLoginChoice()
+
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             }
         }
+
         loginPrompt.setOnClickListener {
             // Navigates to Login Activity
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
+    }
 
+    // Reset the login choice in shared preferences
+    private fun resetLoginChoice() {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("hasChosenToSaveLogin", false) // Reset the choice for saving login info
+        editor.apply()
     }
 }

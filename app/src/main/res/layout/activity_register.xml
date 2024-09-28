@@ -35,6 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="15dp"
         android:hint="Username"
         android:textColorHint="@android:color/darker_gray" />
 
@@ -44,6 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
         android:hint="Password"
         android:inputType="textPassword"
         android:textColorHint="@android:color/darker_gray" />
@@ -54,6 +56,7 @@
         android:layout_height="wrap_content"
         android:text="Register"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="30dp"
         style="@style/ButtonStyle" />
 
     <TextView
@@ -62,6 +65,7 @@
         android:layout_height="wrap_content"
         android:text="Already have an account? Login"
         android:layout_marginTop="8dp"
+        android:textStyle="italic"
         android:layout_gravity="center_horizontal" />
 
 

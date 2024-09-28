@@ -10,4 +10,6 @@
     <color name="accentColorDark">#FFB300</color>
     <color name="backgroundColor">#FFFFFF</color>
 
+    <color name="backgroundColorDark">#121212</color>
+
 </resources>

@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.content.ContentValues
 import android.database.Cursor
+import java.security.MessageDigest
 
 class DBHelper (context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -34,20 +35,26 @@ class DBHelper (context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, nul
         val db = this.writableDatabase
         val values = ContentValues()
         values.put(COLUMN_USERNAME, username)
-        values.put(COLUMN_PASSWORD, password)
+        values.put(COLUMN_PASSWORD, hashPassword(password))  // Store hashed password
         db.insert(TABLE_USERS, null, values)
         db.close()
     }
 
     fun checkUser(username: String, password: String): Boolean {
         val db = this.readableDatabase
+        val hashedPassword = hashPassword(password)  // Hash the input password
         val cursor: Cursor = db.rawQuery(
             "SELECT * FROM $TABLE_USERS WHERE $COLUMN_USERNAME=? AND $COLUMN_PASSWORD=?",
-            arrayOf(username, password)
+            arrayOf(username, hashedPassword)  // Compare hashed passwords
         )
         val count = cursor.count
         cursor.close()
         db.close()
         return count > 0
+    }
+
+    fun hashPassword(password: String): String {
+        val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
     }
 }

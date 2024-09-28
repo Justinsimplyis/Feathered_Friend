@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         }
         // Delay for a few seconds before launching the main activity
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, RegisterActivity::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }, 2000) // 2000 milliseconds (2 seconds)
     }

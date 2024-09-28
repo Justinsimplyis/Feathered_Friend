@@ -18,6 +18,8 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var registerButton: Button
     private lateinit var loginPrompt: TextView
 
+    private lateinit var dbHelper: DBHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -33,22 +35,24 @@ class RegisterActivity : AppCompatActivity() {
         registerButton = findViewById(R.id.registerButton)
         loginPrompt = findViewById(R.id.loginPrompt)
 
-        registerButton.setOnClickListener {
-            val username = username.text.toString()
-            val password = password.text.toString()
+        dbHelper = DBHelper(this)
 
-            if (username.isEmpty() || password.isEmpty()) {
+        registerButton.setOnClickListener {
+            val usernameText = username.text.toString()
+            val passwordText = password.text.toString()
+
+
+            if (usernameText.isEmpty() || passwordText.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             } else {
-                // Simulate registration process (replace with real registration logic)
+                dbHelper.addUser(usernameText, passwordText)
                 Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
-                // Navigate to Login Activity
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             }
         }
         loginPrompt.setOnClickListener {
-            // Navigate to Login Activity
+            // Navigates to Login Activity
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }

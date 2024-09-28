@@ -8,12 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
+
 class HomeActivity : AppCompatActivity() {
     private lateinit var navObservations: LinearLayout
-    private lateinit var navMap : LinearLayout
-    private lateinit var navSettings : LinearLayout
-
-
+    private lateinit var navMap: LinearLayout
+    private lateinit var navSettings: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +41,7 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         }//(GeeksForGeeks, 2024)
+
+
     }
 }
-//Reference List
-//GeeksForGeeks. 2024. Bottom Navigation Bar in Android. [Online] Available at: https://www.geeksforgeeks.org/bottom-navigation-bar-in-android/. [Accessed 18 August 2024]

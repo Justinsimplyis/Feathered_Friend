@@ -16,7 +16,7 @@
         android:layout_height="199dp"
         android:src="@drawable/background_img_2"
         android:layout_marginBottom="5dp"
-        android:contentDescription=""
+        android:contentDescription="The unofficial logo for feathered friend app"
         tools:ignore="ImageContrastCheck"/>
 
 
@@ -63,6 +63,25 @@
         android:layout_marginTop="16dp"
         style="@style/ButtonStyle"
         tools:ignore="TextContrastCheck"/>
+
+    <Switch
+        android:id="@+id/saveLoginSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Login"
+        android:padding="12dp"
+        android:minHeight="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="2dp"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/saveLoginSwitch"
+        android:layout_marginBottom="16dp" />
+
+
 
     <TextView
         android:id="@+id/forgotPassword"

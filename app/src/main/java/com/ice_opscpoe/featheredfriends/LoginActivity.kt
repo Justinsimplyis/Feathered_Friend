@@ -1,9 +1,12 @@
 package com.ice_opscpoe.featheredfriends
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -18,6 +21,10 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var loginButton: Button
     private lateinit var forgotPassword: TextView
     private lateinit var registerPrompt: TextView
+    private lateinit var saveLoginSwitch: Switch
+
+    private lateinit var dbHelper: DBHelper
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +40,14 @@ class LoginActivity : AppCompatActivity() {
         loginButton = findViewById(R.id.loginButton)
         forgotPassword = findViewById(R.id.forgotPassword)
         registerPrompt = findViewById(R.id.registerPrompt)
+        forgotPassword = findViewById(R.id.forgotPassword)
+
+        saveLoginSwitch = findViewById(R.id.saveLoginSwitch)
+
+        dbHelper = DBHelper(this)
+        sharedPreferences = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE)
+
+        checkSavedLogin()
 
         loginButton.setOnClickListener {
             val usernameText = username.text.toString()
@@ -41,17 +56,26 @@ class LoginActivity : AppCompatActivity() {
             if (usernameText.isEmpty() || passwordText.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             } else {
-                // Simulate login process (replace with real authentication logic)
-                Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                // Navigate to Main Activity or Dashboard
-                startActivity(Intent(this, HomeActivity::class.java))
-                finish()
+                if (dbHelper.checkUser(usernameText, passwordText)) {
+                    Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+
+                    if (saveLoginSwitch.isChecked) {
+                        saveLoginInfo(usernameText, passwordText)
+                    }
+
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    finish()
+                } else {
+                    Toast.makeText(this, "Invalid Credentials", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
         forgotPassword.setOnClickListener {
             // Handle forgot password logic here
-            Toast.makeText(this, "Forgot Password clicked", Toast.LENGTH_SHORT).show()
+//            val intent = Intent(this, ::class.java)
+//            startActivity(intent)
+//            finish()
         }
 
         registerPrompt.setOnClickListener {
@@ -59,5 +83,23 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this, RegisterActivity::class.java))
             finish()
         }
+    }
+    private fun checkSavedLogin() {
+        val savedUsername = sharedPreferences.getString("username", null)
+        val savedPassword = sharedPreferences.getString("password", null)
+
+        if (savedUsername != null && savedPassword != null) {
+            // Auto-fill the login details
+            username.setText(savedUsername)
+            password.setText(savedPassword)
+            saveLoginSwitch.isChecked = true
+        }
+    }
+
+    private fun saveLoginInfo(username: String, password: String) {
+        val editor = sharedPreferences.edit()
+        editor.putString("username", username)
+        editor.putString("password", password)
+        editor.apply()
     }
 }

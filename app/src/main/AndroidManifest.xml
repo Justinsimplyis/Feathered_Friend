@@ -37,15 +37,7 @@
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
-        <activity
-            android:name=".AddObservationActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ObservationActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SettingActivity"
-            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

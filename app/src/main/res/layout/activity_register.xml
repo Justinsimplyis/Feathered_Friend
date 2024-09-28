@@ -15,6 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="199dp"
         android:layout_marginBottom="5dp"
+        android:contentDescription="The unofficial logo for feathered friend app"
         android:src="@drawable/background_img_1_a" />
 
     <TextView

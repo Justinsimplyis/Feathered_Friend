@@ -60,10 +60,9 @@ class SettingsActivity : AppCompatActivity() {
 
         saveLoginSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                // Notify user that login info will be saved
                 Toast.makeText(this, "Login info will be saved on next login", Toast.LENGTH_SHORT).show()
             } else {
-                // Clear login info if the user chooses not to save
+                // This clears the login info if the user chooses not to save
                 clearLoginInfo()
             }
         }
@@ -114,3 +113,6 @@ class SettingsActivity : AppCompatActivity() {
         finish()
     }
 }
+//Reference List
+//Coding Meet. 2023. How to Handle Light Mode or Dark Mode Theme app in Android Studio Kotlin. [Youtube] https://www.youtube.com/watch?v=UVeki-FKH8c. [Accessed on 28 September 2024]
+//Tutorials Point. 2024. Android - Session Management. [Online] https://www.tutorialspoint.com/android/android_session_management.htm. [Accessed on 28 September 2024]

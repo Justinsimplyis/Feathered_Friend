@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
         dbHelper = DBHelper(this)
         sharedPreferences = getSharedPreferences("userPrefs", Context.MODE_PRIVATE)
 
-        // Check if login details are saved
+        // This checks if login details are saved
         checkSavedLogin()
 
         loginButton.setOnClickListener {
@@ -128,3 +128,8 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 }
+//Reference List
+//Android Knowledge. 2023. Login and Sign-Up using SQLite in Android Studio| Kotlin .[Youtube]https://www.youtube.com/watch?v=zz659HPTe6M. [Accessed on 13 September 2024]
+//Android Knowledge. 2023. Notes App - CRUD SQLite Database in Android Studio using Kotlin| Create Read Update Delete Data. [Youtube] https://www.youtube.com/watch?v=BVAslimaGSk.[Accessed on 14 Septemeber 2024]
+//CodePath. nd. Using DialogFragment. [Online] https://guides.codepath.com/android/Using-DialogFragment. [Accessed on 27 September 2024]
+//DigitalOcean. 2022. Android Shared Preferences Example Tutorial .[Online]https://www.digitalocean.com/community/tutorials/android-shared-preferences-example-tutorial. [ Accessed on 27 September 2024]

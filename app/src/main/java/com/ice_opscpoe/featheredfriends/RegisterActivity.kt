@@ -52,7 +52,6 @@ class RegisterActivity : AppCompatActivity() {
                 dbHelper.addUser(usernameText, passwordText)
                 Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
 
-                // Reset the login choice before navigating to LoginActivity
                 resetLoginChoice()
 
                 startActivity(Intent(this, LoginActivity::class.java))
@@ -61,16 +60,19 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         loginPrompt.setOnClickListener {
-            // Navigates to Login Activity
+
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
     }
 
-    // Reset the login choice in shared preferences
+    // This resets the login choice in shared preferences
     private fun resetLoginChoice() {
         val editor = sharedPreferences.edit()
-        editor.putBoolean("hasChosenToSaveLogin", false) // Reset the choice for saving login info
+        editor.putBoolean("hasChosenToSaveLogin", false)
         editor.apply()
     }
 }
+//Reference List
+//Android Knowledge. 2023. Login and Sign-Up using SQLite in Android Studio| Kotlin .[Youtube]https://www.youtube.com/watch?v=zz659HPTe6M. [Accessed on 13 September 2024]
+//Android Knowledge. 2023. Notes App - CRUD SQLite Database in Android Studio using Kotlin| Create Read Update Delete Data. [Youtube] https://www.youtube.com/watch?v=BVAslimaGSk.[Accessed on 14 Septemeber 2024]

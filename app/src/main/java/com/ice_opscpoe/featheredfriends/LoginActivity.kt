@@ -76,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
             username.setText(savedUsername)
             password.setText(savedPassword)
         }
-    }
+    }//(Android Knowledge. 2023), (DigitalOcean. 2022)
 
     private fun showSaveLoginDialog(username: String, password: String) {
         val hasChosenToSaveLogin = sharedPreferences.getBoolean("hasChosenToSaveLogin", false)
@@ -110,7 +110,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this, HomeActivity::class.java))
             finish()
         }
-    }
+    }//(CodePath)
 
     private fun saveLoginInfo(username: String, password: String) {
         val editor = sharedPreferences.edit()
@@ -119,14 +119,14 @@ class LoginActivity : AppCompatActivity() {
         editor.putBoolean("isLoginSaved", true)
         editor.apply()
         Toast.makeText(this, "Login info saved", Toast.LENGTH_SHORT).show()
-    }
+    }//(Android Knowledge. 2023)
 
     private fun markChoiceMade(choice: Boolean) {
         with(sharedPreferences.edit()) {
             putBoolean("hasChosenToSaveLogin", choice)
             apply()
         }
-    }
+    }//(DigitalOcean. 2022)
 }
 //Reference List
 //Android Knowledge. 2023. Login and Sign-Up using SQLite in Android Studio| Kotlin .[Youtube]https://www.youtube.com/watch?v=zz659HPTe6M. [Accessed on 13 September 2024]

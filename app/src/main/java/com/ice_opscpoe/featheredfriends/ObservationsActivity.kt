@@ -2,7 +2,9 @@ package com.ice_opscpoe.featheredfriends
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.ListView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -12,6 +14,8 @@ class ObservationsActivity : AppCompatActivity() {
     private lateinit var navHome : LinearLayout
     private lateinit var navMap : LinearLayout
     private lateinit var navSettings : LinearLayout
+    private lateinit var addObservationButton: Button
+    private lateinit var observationsListView: ListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +29,8 @@ class ObservationsActivity : AppCompatActivity() {
         navHome = findViewById(R.id.navHome)
         navMap = findViewById(R.id.navMap)
         navSettings = findViewById(R.id.navSettings)
+        addObservationButton = findViewById(R.id.addObservationButton)
+        observationsListView = findViewById(R.id.observationsListView)
 
         navHome.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
@@ -39,6 +45,12 @@ class ObservationsActivity : AppCompatActivity() {
         navSettings.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
-        }//(GeeksForGeeks, 2024
+        }
+        loadObservations()
+
+    }
+
+    private fun loadObservations() {
+        TODO("Not yet implemented")
     }
 }

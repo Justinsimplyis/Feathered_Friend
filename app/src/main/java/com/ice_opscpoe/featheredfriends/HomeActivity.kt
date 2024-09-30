@@ -32,7 +32,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var birdOfTheDayTitle: TextView
     private lateinit var birdOfTheDayImage: ImageView
     private lateinit var birdOfTheDayDescription: TextView
-    private lateinit var birdOfTheDayTips: TextView
 
     private lateinit var dbHelper: DBHelper
     private lateinit var sharedPreferences: SharedPreferences
@@ -74,7 +73,6 @@ class HomeActivity : AppCompatActivity() {
         birdOfTheDayTitle = findViewById(R.id.birdOfTheDayTitle)
         birdOfTheDayImage = findViewById(R.id.birdOfTheDayImage)
         birdOfTheDayDescription = findViewById(R.id.birdOfTheDayDescription)
-        birdOfTheDayTips = findViewById(R.id.birdOfTheDayTips)
 
         dbHelper = DBHelper(this)
         sharedPreferences = getSharedPreferences("userPrefs", Context.MODE_PRIVATE)
@@ -137,7 +135,6 @@ class HomeActivity : AppCompatActivity() {
         birdOfTheDayTitle.text = bird.name
         Glide.with(this).load(bird.imageResourceId).into(birdOfTheDayImage)
         birdOfTheDayDescription.text = bird.description
-        birdOfTheDayTips.text = bird.tips
     }
 
     private fun showAddFavoriteBirdDialog() {
@@ -156,22 +153,7 @@ class HomeActivity : AppCompatActivity() {
             chooseImageFromGallery()
         }
 
-        btnAddFavoriteBird.setOnClickListener {
-            val birdName = editBirdName.text.toString()
-            if (birdName.isNotEmpty() && selectedImageUri != null) {
-                if (dbHelper.addFavoriteBird(birdName, selectedImageUri.toString(), currentUserId)) {
-                    Toast.makeText(this, "Favorite Bird Added!", Toast.LENGTH_SHORT).show()
-                    refreshFavoriteBirdsList()  // Refresh the favorite birds list
-                    dialog.dismiss()
-                } else {
-                    Toast.makeText(this, "Failed to add favorite bird. Please try again.", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                Toast.makeText(this, "Please enter bird name and select an image", Toast.LENGTH_SHORT).show()
-            }
-        }
 
-        dialog.show()
     }
 
     private fun chooseImageFromGallery() {
@@ -200,13 +182,7 @@ class HomeActivity : AppCompatActivity() {
         } else {
             imageViewBird.setImageResource(0) // Reset the image view if the URI is null
         }
-    }
-
-    private fun refreshFavoriteBirdsList() {
-        // Retrieve favorite birds from the database
-        val favoriteBirds = dbHelper.getFavoriteBirds(currentUserId)
-        favoriteBirdsAdapter.updateBirds(favoriteBirds) // Update the adapter with the new list
-    }
+   }
 }
 //Reference List
 //DigitalOcean. 2022. Android Shared Preferences Example Tutorial .[Online]https://www.digitalocean.com/community/tutorials/android-shared-preferences-example-tutorial. [ Accessed on 27 September 2024]

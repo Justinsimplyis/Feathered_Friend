@@ -1,104 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     tools:context=".HomeActivity">
 
-    <TextView
-        android:id="@+id/welcomeMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Welcome Feathered Friend!"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="@color/primaryColorDark"
-        android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"/>
-
-    <View
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@android:color/darker_gray"
-        android:layout_below="@id/welcomeMessage"
-        android:layout_marginBottom="16dp"/>
-
-    <!-- Bird Information Section -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/welcomeMessage"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_marginBottom="56dp">
-
-        <TextView
-            android:id="@+id/currentSeasonBirdsTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="Birds of the Season"
-            android:textAlignment="gravity"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNav"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/welcomeMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Feathered Friend!"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@color/primaryColorDark"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="24dp" />
 
             <LinearLayout
+                android:id="@+id/birdOfTheDaySection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
-
-                <ImageView
-                    android:id="@+id/birdImage1"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginEnd="8dp"
-                    android:contentDescription="Bird Image 1" />
+                android:orientation="vertical"
+                android:background="@drawable/bg_bird_of_the_day_section"
+                android:padding="16dp"
+                android:layout_marginBottom="24dp">
 
                 <TextView
-                    android:id="@+id/birdDescription1"
+                    android:id="@+id/birdOfTheDayTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bird Description 1"
-                    android:textSize="16sp" />
+                    android:text="Bird of the Day"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/birdOfTheDayImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="8dp"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true" />
+
+                <TextView
+                    android:id="@+id/birdOfTheDayDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textSize="14sp"
+                    android:text="Description of the bird of the day goes here." />
+
+                <TextView
+                    android:id="@+id/birdOfTheDayTips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textSize="14sp"
+                    android:text="Bird tip of the day goes here." />
             </LinearLayout>
 
-            <LinearLayout
+            <View
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/black"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="1dp"/>
+
+            <TextView
+                android:id="@+id/challengeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current Challenge"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="24dp" />
+
+            <TextView
+                android:id="@+id/challengeDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
+                android:layout_marginTop="5dp"
+                android:text="Observe 5 different bird species this week!"
+                android:textSize="14sp" />
 
-                <ImageView
-                    android:id="@+id/birdImage2"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginEnd="8dp"
-                    android:contentDescription="Bird Image 2" />
+            <ImageView
+                android:id="@+id/notificationIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_notifications_24"
+                android:contentDescription="Challenge Met Notification"
+                android:layout_gravity="top"
+                android:visibility="gone"
+                android:layout_marginTop="8dp" />
 
-                <TextView
-                    android:id="@+id/birdDescription2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Bird Description 2"
-                    android:textSize="16sp" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/progressText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0/5 species observed"
+                android:textAlignment="center"
+                android:layout_marginTop="16dp"
+                android:textSize="14sp" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:progress="0"
+                android:max="5"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:indeterminate="false" />
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/black"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="1dp"/>
+
+            <TextView
+                android:id="@+id/favoriteBirdsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Favorite Birds"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="24dp" />
+
+            <Button
+                android:id="@+id/addFavoriteBirdButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Favorite Bird"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp"
+                android:backgroundTint="@color/primaryColor"
+                android:textColor="@android:color/white"/>
+
+            <TextView
+                android:id="@+id/noFavoriteBirdsMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No favorite birds added"
+                android:visibility="gone"
+                android:layout_gravity="center" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/favoriteBirdsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp" />
 
         </LinearLayout>
-    </LinearLayout>
-
+    </ScrollView>
 
     <RelativeLayout
+        android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -133,6 +209,7 @@
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -176,7 +253,6 @@
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </LinearLayout>
-
         </LinearLayout>
     </RelativeLayout>
 

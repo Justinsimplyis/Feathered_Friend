@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Feathered Friends</string>
+    <string name="google_maps_key">AIzaSyD1N0CcUqaFL-jLfPoYr8fOoJXCkfaDD2Q</string>
+    <string name="bird_hotspot_api_key">s22a442fd3kc</string>
 </resources>

@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
+
 class ObservationsActivity : AppCompatActivity() {
     private lateinit var navHome: LinearLayout
     private lateinit var navMap: LinearLayout

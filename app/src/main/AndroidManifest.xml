@@ -5,8 +5,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".UserSettings"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FeatheredFriends"
         tools:targetApi="31">
+        <activity
+            android:name=".ObservationDetailsActivity"
+            android:exported="false" />
         <activity
             android:name=".ObservationsDetailScreen"
             android:exported="false" />
@@ -36,15 +41,6 @@
             android:exported="false" />
         <activity
             android:name=".RegisterActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AddObservationActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ObservationActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SettingActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

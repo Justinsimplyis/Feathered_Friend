@@ -7,10 +7,18 @@ Youtube_Video:
 
 ----------------------------------------------------------------------------------
 Overview
-
+The Feathered Friends Observations App is an Android application that allows users to manage observations of various bird species providing users with a seamless experience in tracking their birdwatching activities
 
 Features
-
-
-
+Login
+Registration
+Home(View Bird of the day, Compete in a Challenge[comming soon], Add favorite birds[comming soon])
+Observations(Add obsevations, edit or delete observations )
+Map (View Current Location)
+View Hotspots(Comming soon)
+SQLite Data Storage
+Save Login
+Themes
+Notifications
+Shared Preferences
 Set-Up

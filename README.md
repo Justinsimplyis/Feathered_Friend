@@ -14,15 +14,15 @@ The Feathered Friends Observations App is an Android application that allows use
 Features
 ________________________
 
-Login
-Registration
-Home(View Bird of the day, Compete in a Challenge[comming soon], Add favorite birds[comming soon])
-Observations(Add obsevations, edit or delete observations )
-Map (View Current Location)
-View Hotspots(Comming soon)
-SQLite Data Storage
-Save Login
-Themes
-Notifications
-Shared Preferences
+- Login
+- Registration
+- Home(View Bird of the day, Compete in a Challenge[comming soon], Add favorite birds[comming soon])
+- Observations(Add obsevations, edit or delete observations )
+- Map (View Current Location)
+- View Hotspots(Comming soon)
+- SQLite Data Storage
+- Save Login
+- Themes
+- Notifications
+- Shared Preferences
 

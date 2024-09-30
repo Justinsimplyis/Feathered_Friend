@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.ice_opscpoe.featheredfriends.MapActivity
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var navObservations: LinearLayout
@@ -45,4 +46,4 @@ class HomeActivity : AppCompatActivity() {
     }
 }
 //Reference List
-//GeeksForGeeks. 2024. Bottom Navigation Bar in Android. [Online] Available at: https://www.geeksforgeeks.org/bottom-navigation-bar-in-android/. [Accessed 18 August 2024]
+//GeeksForGeeks. 2024. Bottom Navigation Bar in Android. [Online] Available at: https://www.geeksforgeeks.org/bottom-navigation-bar-in-android/. [Accessed 18 August 2024] w

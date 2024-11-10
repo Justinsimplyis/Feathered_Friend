@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
 
 
     <application
@@ -15,7 +17,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/background_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.FeatheredFriends"
         tools:targetApi="31">
@@ -27,9 +29,7 @@
         <activity
             android:name=".ObservationDetailsActivity"
             android:exported="false" />
-        <activity
-            android:name=".ObservationsDetailScreen"
-            android:exported="false" />
+
         <activity
             android:name=".HomeActivity"
             android:exported="false" />

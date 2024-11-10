@@ -1,5 +1,6 @@
 package com.ice_opscpoe.featheredfriends
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -10,9 +11,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -25,8 +29,14 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var navObservations: LinearLayout
     private lateinit var navMap: LinearLayout
     private lateinit var navSettings: LinearLayout
-    private lateinit var addFavoriteBirdButton: Button
-    private lateinit var favoriteBirdsRecyclerView: RecyclerView
+
+    //progress bar
+    private lateinit var progressText: TextView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var notificationSwitch: Switch
+
+    private val totalChallengeCount = 5
+    private var uniqueSpeciesCount = 0
 
     // Bird of the Day components
     private lateinit var birdOfTheDayTitle: TextView
@@ -35,7 +45,6 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var dbHelper: DBHelper
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var favoriteBirdsAdapter: FavoriteBirdsAdapter
 
     private val birdsOfTheDay = arrayOf(
         Bird("Southern Yellow-Billed Hornbill", R.drawable.southern_yellow_billed_hornbill,
@@ -51,13 +60,12 @@ class HomeActivity : AppCompatActivity() {
 
     private var currentBirdIndex = 0
     private var currentUserId = -1
-    private val IMAGE_PICK_CODE = 1000
-    private var selectedImageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
+        NotificationUtils.createNotificationChannel(this)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -67,26 +75,31 @@ class HomeActivity : AppCompatActivity() {
         navObservations = findViewById(R.id.navObservations)
         navMap = findViewById(R.id.navMap)
         navSettings = findViewById(R.id.navSettings)
-        addFavoriteBirdButton = findViewById(R.id.addFavoriteBirdButton)
-        favoriteBirdsRecyclerView = findViewById(R.id.favoriteBirdsRecyclerView)
+
+
 
         birdOfTheDayTitle = findViewById(R.id.birdOfTheDayTitle)
         birdOfTheDayImage = findViewById(R.id.birdOfTheDayImage)
         birdOfTheDayDescription = findViewById(R.id.birdOfTheDayDescription)
 
+        progressText = findViewById(R.id.progressText)
+        progressBar = findViewById(R.id.progressBar)
+
+
         dbHelper = DBHelper(this)
         sharedPreferences = getSharedPreferences("userPrefs", Context.MODE_PRIVATE)
 
-        // Load current user ID (you might have a better way to get this)
+        // Load current user ID
         currentUserId = sharedPreferences.getInt("userId", -1)
-
-        // Set up RecyclerView for favorite birds
-        favoriteBirdsRecyclerView.layoutManager = LinearLayoutManager(this)
-        favoriteBirdsAdapter = FavoriteBirdsAdapter(listOf())
-        favoriteBirdsRecyclerView.adapter = favoriteBirdsAdapter
 
         // Check and update the bird of the day
         updateBirdOfTheDayIfNeeded()
+
+        // Gets the data passed from the ObservationsActivity (number of unique species observed)
+        uniqueSpeciesCount = intent.getIntExtra("uniqueSpeciesCount", 0)
+
+        // Updates the progress
+        updateProgress(uniqueSpeciesCount)
 
         navObservations.setOnClickListener {
             val intent = Intent(this, ObservationsActivity::class.java)
@@ -103,9 +116,7 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        addFavoriteBirdButton.setOnClickListener {
-            showAddFavoriteBirdDialog()
-        }
+
     }
 
     private fun updateBirdOfTheDayIfNeeded() {
@@ -136,53 +147,29 @@ class HomeActivity : AppCompatActivity() {
         Glide.with(this).load(bird.imageResourceId).into(birdOfTheDayImage)
         birdOfTheDayDescription.text = bird.description
     }
-
-    private fun showAddFavoriteBirdDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_add_favorite_bird, null)
-        val editBirdName = dialogView.findViewById<EditText>(R.id.birdNameEditText)
-        val btnChooseImage = dialogView.findViewById<Button>(R.id.selectImageButton)
-        val imageViewBird = dialogView.findViewById<ImageView>(R.id.birdImageView)
-        val btnAddFavoriteBird = dialogView.findViewById<Button>(R.id.addBirdButton)
-
-        val dialog = AlertDialog.Builder(this)
-            .setTitle("Add Favorite Bird")
-            .setView(dialogView)
-            .create()
-
-        btnChooseImage.setOnClickListener {
-            chooseImageFromGallery()
+    private fun openBirdVideo(videoUrl: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl))
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
+        } else {
+            Toast.makeText(this, "Unable to open video", Toast.LENGTH_SHORT).show()
         }
-
-
     }
+    @SuppressLint("SetTextI18n")
+    private fun updateProgress(uniqueSpeciesCount: Int) {
+        progressText.text = "Progress: $uniqueSpeciesCount/$totalChallengeCount"
+        progressBar.progress = uniqueSpeciesCount
 
-    private fun chooseImageFromGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, IMAGE_PICK_CODE)
-    }
+        // Check if the challenge is completed
+        if (uniqueSpeciesCount >= totalChallengeCount) {
+            progressText.append("\nChallenge Completed!")
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == IMAGE_PICK_CODE) {
-            if (resultCode == RESULT_OK && data != null) {
-                selectedImageUri = data.data
-                // Updates the dialog's ImageView with the selected image
-                updateDialogImage(selectedImageUri)
-            } else {
-                Toast.makeText(this, "Image selection canceled", Toast.LENGTH_SHORT).show()
+            // If the notification switch is on, show the notification
+            if (notificationSwitch.isChecked) {
+                NotificationUtils.showGoalCompletedNotification(this)
             }
         }
-    }//(Android Knowledge. 2023), (Android Developers. 2024)
-
-    private fun updateDialogImage(imageUri: Uri?) {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_add_favorite_bird, null)
-        val imageViewBird = dialogView.findViewById<ImageView>(R.id.birdImageView)
-        if (imageUri != null) {
-            Glide.with(this).load(imageUri).into(imageViewBird) // Use Glide to load the selected image
-        } else {
-            imageViewBird.setImageResource(0) // Reset the image view if the URI is null
-        }
-   }
+    }
 }
 //Reference List
 //DigitalOcean. 2022. Android Shared Preferences Example Tutorial .[Online]https://www.digitalocean.com/community/tutorials/android-shared-preferences-example-tutorial. [ Accessed on 27 September 2024]

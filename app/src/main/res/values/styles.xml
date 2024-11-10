@@ -24,6 +24,9 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:padding">12dp</item>
     </style>
+    <style name="ButtonStyle3">
+        <item name="android:backgroundTint">@color/Orange</item>
+    </style>
 
     <style name="ToolbarStyle">
         <item name="android:background">@color/primaryColor</item>

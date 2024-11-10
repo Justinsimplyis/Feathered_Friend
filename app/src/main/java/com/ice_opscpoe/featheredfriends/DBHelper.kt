@@ -1,15 +1,15 @@
 package com.ice_opscpoe.featheredfriends
 
-import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.content.ContentValues
-import android.database.Cursor
-import android.net.Uri
-import java.security.MessageDigest
+import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
-class DBHelper (context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
         private const val DATABASE_VERSION = 1
@@ -20,6 +20,7 @@ class DBHelper (context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, nul
         const val COLUMN_USER_ID = "id"
         const val COLUMN_USERNAME = "username"
         const val COLUMN_PASSWORD = "password"
+        const val COLUMN_FIREBASE_UID = "firebase_uid"
 
         // Observation table constants
         const val TABLE_OBSERVATIONS = "observations"
@@ -28,16 +29,18 @@ class DBHelper (context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, nul
         const val COLUMN_DETAILS = "details"
         const val COLUMN_DATE = "date"
         const val COLUMN_LOCATION = "location"
-        const val COLUMN_USER_ID_FK = "user_id" // Foreign key for user
-
+        const val COLUMN_USER_ID_FK = "user_id" // Linked to user ID
     }
 
+    private val firestore = FirebaseFirestore.getInstance()
+
     override fun onCreate(db: SQLiteDatabase) {
-        // Create users table
+        // Create users table with Firebase UID
         val createUserTable = ("CREATE TABLE $TABLE_USERS (" +
                 "$COLUMN_USER_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COLUMN_USERNAME TEXT," +
-                "$COLUMN_PASSWORD TEXT)")
+                "$COLUMN_FIREBASE_UID TEXT)")
+
         db.execSQL(createUserTable)
 
         // Create observations table
@@ -50,58 +53,55 @@ class DBHelper (context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, nul
                 "$COLUMN_USER_ID_FK INTEGER," +
                 "FOREIGN KEY($COLUMN_USER_ID_FK) REFERENCES $TABLE_USERS($COLUMN_USER_ID))")
         db.execSQL(createObservationsTable)
-
     }
+
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_USERS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_OBSERVATIONS")
         onCreate(db)
     }
 
-    // User-related methods
-    fun addUser(username: String, password: String) {
+    // Add a new user with Firebase UID
+    fun addUser(username: String, firebaseUid: String) {
         val db = this.writableDatabase
-        val values = ContentValues()
-        values.put(COLUMN_USERNAME, username)
-        values.put(COLUMN_PASSWORD, hashPassword(password))
+        val values = ContentValues().apply {
+            put(COLUMN_USERNAME, username)
+            put(COLUMN_FIREBASE_UID, firebaseUid)
+        }
         db.insert(TABLE_USERS, null, values)
         db.close()
     }
 
-    fun checkUser(username: String, password: String): Boolean {
+    // Get user ID by Firebase UID
+    fun getUserIdByFirebaseUid(firebaseUid: String): Int {
         val db = this.readableDatabase
-        val hashedPassword = hashPassword(password)
-        val cursor: Cursor = db.rawQuery(
-            "SELECT * FROM $TABLE_USERS WHERE $COLUMN_USERNAME=? AND $COLUMN_PASSWORD=?",
-            arrayOf(username, hashedPassword)  // Compare hashed passwords
-        )
-        val count = cursor.count
-        cursor.close()
-        db.close()
-        return count > 0
-    }
-
-
-    @SuppressLint("Range")
-    fun getUserId(username: String): Int {
-        val db = this.readableDatabase
-        val cursor: Cursor = db.rawQuery(
-            "SELECT $COLUMN_USER_ID FROM $TABLE_USERS WHERE $COLUMN_USERNAME=?",
-            arrayOf(username)
-        )
+        val cursor: Cursor = db.query(TABLE_USERS, arrayOf(COLUMN_USER_ID), "$COLUMN_FIREBASE_UID = ?", arrayOf(firebaseUid), null, null, null)
         var userId = -1
         if (cursor.moveToFirst()) {
-            userId = cursor.getInt(cursor.getColumnIndex(COLUMN_USER_ID))
+            userId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_ID))
         }
         cursor.close()
-        db.close()
         return userId
     }
-    // Password hashing function
-    private fun hashPassword(password: String): String {
-        val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
-        return bytes.joinToString("") { "%02x".format(it) }
-    }//(Android Knowledge. 2023), (Android Developer. 2024)
+
+    // Check if user exists
+    fun checkUser(username: String): Boolean {
+        val db = this.readableDatabase
+        val cursor: Cursor = db.query(TABLE_USERS, arrayOf(COLUMN_USER_ID), "$COLUMN_USERNAME = ?", arrayOf(username), null, null, null)
+        val userExists = cursor.count > 0
+        cursor.close()
+        return userExists
+    }
+
+    // Update Firebase UID for an existing user
+    fun updateFirebaseUid(username: String, firebaseUid: String) {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_FIREBASE_UID, firebaseUid)
+        }
+        db.update(TABLE_USERS, values, "$COLUMN_USERNAME = ?", arrayOf(username))
+        db.close()
+    }
 
     // Observation-related methods
     fun addObservation(title: String?, details: String?, date: String?, location: String?, userId: Int) {
@@ -160,6 +160,7 @@ class DBHelper (context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, nul
     }//(Android Knowledge. 2023), (Android Developer. 2024)
 
 }
+
 //Reference List
 //Android Knowledge. 2023. Notes App - CRUD SQLite Database in Android Studio using Kotlin| Create Read Update Delete Data. [Youtube] https://www.youtube.com/watch?v=BVAslimaGSk.[Accessed on 14 Septemeber 2024]
 //Android Developer. 2024. Save data using SQLite. [Online]. https://developer.android.com/training/data-storage/sqlite. [Accessed on 28 Sepetember 2024]

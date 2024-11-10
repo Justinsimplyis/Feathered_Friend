@@ -9,11 +9,7 @@ data class Bird(
     val description: String,
     val tips: String
 )
-//data class for favorite birds()
-data class FavoriteBird(
-    val name: String,
-    val imageUri: String
-)
+
 //data class for observation
 data class Observation(
     val id: Int,

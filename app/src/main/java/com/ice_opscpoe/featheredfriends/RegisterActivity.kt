@@ -2,7 +2,6 @@ package com.ice_opscpoe.featheredfriends
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -12,6 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.auth.FirebaseAuth
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -20,13 +20,16 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var registerButton: Button
     private lateinit var loginPrompt: TextView
 
+    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var dbHelper: DBHelper
-    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_register)
+
+        firebaseAuth = FirebaseAuth.getInstance()
+        dbHelper = DBHelper(this)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -39,9 +42,6 @@ class RegisterActivity : AppCompatActivity() {
         registerButton = findViewById(R.id.registerButton)
         loginPrompt = findViewById(R.id.loginPrompt)
 
-        dbHelper = DBHelper(this)
-        sharedPreferences = getSharedPreferences("userPrefs", Context.MODE_PRIVATE)
-
         registerButton.setOnClickListener {
             val usernameText = username.text.toString()
             val passwordText = password.text.toString()
@@ -49,30 +49,36 @@ class RegisterActivity : AppCompatActivity() {
             if (usernameText.isEmpty() || passwordText.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             } else {
-                dbHelper.addUser(usernameText, passwordText)
-                Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
-
-                resetLoginChoice()
-
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
+                registerWithFirebase(usernameText, passwordText)
             }
         }
 
         loginPrompt.setOnClickListener {
-
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
     }
 
-    // This resets the login choice in shared preferences
-    private fun resetLoginChoice() {
-        val editor = sharedPreferences.edit()
-        editor.putBoolean("hasChosenToSaveLogin", false)
-        editor.apply()
+    private fun registerWithFirebase(email: String, password: String) {
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val user = firebaseAuth.currentUser
+                    val firebaseUserId = user?.uid ?: ""
+
+                    // Store the user info (Firebase UID and username) in SQLite
+                    dbHelper.addUser(email, firebaseUserId)
+
+                    Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                } else {
+                    Toast.makeText(this, "Registration Failed", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 }
+
 //Reference List
 //Android Knowledge. 2023. Login and Sign-Up using SQLite in Android Studio| Kotlin .[Youtube]https://www.youtube.com/watch?v=zz659HPTe6M. [Accessed on 13 September 2024]
 //Android Knowledge. 2023. Notes App - CRUD SQLite Database in Android Studio using Kotlin| Create Read Update Delete Data. [Youtube] https://www.youtube.com/watch?v=BVAslimaGSk.[Accessed on 14 Septemeber 2024]

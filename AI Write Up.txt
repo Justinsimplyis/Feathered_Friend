@@ -1,0 +1,16 @@
+How I used AI for the assessment
+
+Designing a Custom Icon with Hotpot.ai
+Link: https://hotpot.ai/
+Creating a unique app icon was a big deal for me, but I didn't want to spend too much time designing it from scratch. That's when I found Hotpot.ai, which made it super easy to create a professional-looking icon. I loved how simple it was to use. I started by picking typing in my apps name and color scheme and the app asked me to add in any images/icons then generated some designs for me to choose and  to tweak it. I could adjust colors, resize elements, and try out different designs—all with just a few clicks.
+
+The best part? Hotpot.ai helped me put everything together quickly, so I didn’t have to spend ages tweaking tiny details. Once I was happy with the design, I was able to export it in different formats for various devices. It saved me a ton of time and made the icon look really polished, without needing any graphic design skills.
+
+Troubleshooting and Debugging with ChatG
+Link:
+ChatGPT was invaluable when it came to coding challenges. As I worked on the functionality of my app, I encountered several issues related to debugging and troubleshooting, which can often be time-consuming and frustrating.
+
+ChatGPT served as my personal coding assistant, helping me address errors and understand complex code snippets. Whenever I faced an issue, such as a syntax error, a bug in the logic, or problems with integrating certain features, I would describe the issue to ChatGPT. The AI quickly provided clear explanations and practical solutions, sometimes even suggesting alternative ways to implement a feature. For instance, when I encountered difficulties with the progress integration and having it connected with the notifcation, ChatGPT helped me isolate the problem by offering suggestions on how to optimize the code.
+
+Additionally, ChatGPT assisted me with best practices, guiding me through code structuring and improving readability. Its ability to explain technical concepts in simple terms allowed me to learn more and improve my coding skills, making the development process more efficient and educational.
+

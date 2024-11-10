@@ -27,6 +27,7 @@ class ObservationsActivity : AppCompatActivity() {
     private var observationsList: MutableList<Observation> = mutableListOf()
     private var userId: Int = -1
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -88,8 +89,10 @@ class ObservationsActivity : AppCompatActivity() {
         }
         cursor.close()
 
+
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, observationsList.map { it.title })
         observationsListView.adapter = adapter
+
     }
 
     private fun showAddObservationDialog() {

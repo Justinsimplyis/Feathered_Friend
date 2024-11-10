@@ -21,6 +21,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var themeSwitch: Switch
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var saveLoginSwitch: Switch
+    private lateinit var notificationSwitch: Switch
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -40,12 +41,24 @@ class SettingsActivity : AppCompatActivity() {
         logoutButton = findViewById(R.id.logoutButton)
         themeSwitch = findViewById(R.id.themeSwitch)
         saveLoginSwitch = findViewById(R.id.saveLoginSwitch)
+        notificationSwitch = findViewById(R.id.notificationSwitch)
 
         sharedPreferences = getSharedPreferences("userPrefs", MODE_PRIVATE)
 
         themeSwitch.isChecked = UserSettings.isDarkMode(this)
 
         loadSettings()
+        // this Loads saved notification preference
+        val isNotificationsEnabled = sharedPreferences.getBoolean("notificationsEnabled", true)
+        notificationSwitch.isChecked = isNotificationsEnabled
+
+        // Save the preference when the switch is toggled
+        notificationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            val editor = sharedPreferences.edit()
+            editor.putBoolean("notificationsEnabled", isChecked)
+            editor.apply()
+        }
+
 
         navHome.setOnClickListener {
             startActivity(Intent(this, HomeActivity::class.java))

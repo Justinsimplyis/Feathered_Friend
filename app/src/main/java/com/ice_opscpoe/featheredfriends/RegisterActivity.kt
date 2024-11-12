@@ -48,6 +48,8 @@ class RegisterActivity : AppCompatActivity() {
 
             if (usernameText.isEmpty() || passwordText.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            } else if (passwordText.length < 6) { // Password length check
+                Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
             } else {
                 registerWithFirebase(usernameText, passwordText)
             }

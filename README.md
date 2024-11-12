@@ -1,7 +1,7 @@
-OPSC6312_Intermediate_Part_2
+OPSC6312_Intermediate_P.O.E
 -----------------------------------------------------------------------------------
 # Feathered_Friend
- Justin & Sibusiso Part 2
+ Justin & Sibusiso P.0.E
 ----------------------------------------------------------------------------------
 Youtube_Video:https://youtu.be/vrNdNUiA2tc // https://youtu.be/VVCFVUeUOlc?si=x1gPMmdqsGYH-cRB
 
@@ -16,7 +16,7 @@ ________________________
 
 - Login
 - Registration
-- Home(View Bird of the day, Compete in a Challenge[comming soon], Add favorite birds[comming soon])
+- Home(View Bird of the day, Compete in a Challenge[Add favorite bird
 - Observations(Add obsevations, edit or delete observations )
 - Map (View Current Location)
 - View Hotspots(Comming soon)
@@ -24,7 +24,7 @@ ________________________
 - Save Login
 - Themes
 - Notifications
-- Shared Preferences
+- Shared Preference
 
 -----------------------------
 VIDEO LINK

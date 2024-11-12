@@ -140,4 +140,4 @@ class ObservationsActivity : AppCompatActivity() {
 
 //Reference List
 //Android Knowledge. 2023. Notes App - CRUD SQLite Database in Android Studio using Kotlin| Create Read Update Delete Data. [Youtube] https://www.youtube.com/watch?v=BVAslimaGSk.[Accessed on 14 Septemeber 2024]
-//Android Developer. 2024. Save data using SQLite. [Online]. https://developer.android.com/training/data-storage/sqlite. [Accessed on 28 Sepetember 2024]
+//Android Developer. 2024. Save data using SQLite. [Online]. https://developer.android.com/training/data-storage/sqlite. [Accessed on  09 November 2024]

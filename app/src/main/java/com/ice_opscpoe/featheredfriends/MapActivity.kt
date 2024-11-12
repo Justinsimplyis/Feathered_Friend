@@ -34,10 +34,9 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
 
-        // Initialize FusedLocationProviderClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // Initialize the map fragment and set up the map
+        // Initialize the map fragment and set up the map (Google for Developers, 2024)
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
@@ -77,7 +76,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback {
     }
 
     private fun enableMyLocation() {
-        // Ensure permissions are granted before enabling location
+        // check to see if wheterh permission is granted (Google for Developers, 2024)
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
             PackageManager.PERMISSION_GRANTED
         ) {
@@ -122,11 +121,16 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback {
 
     private fun showBirdHotspots() {
         val hotspots = listOf(
-            Triple(LatLng(-33.958056, 25.600000), "African Penguin", "Small penguin found on coastlines."),
-            Triple(LatLng(-33.956521, 25.602222), "Cape Gannet", "Seabird known for spectacular dives."),
-            Triple(LatLng(-33.953891, 25.605139), "Kelp Gull", "A scavenger that frequents beaches."),
-            Triple(LatLng(-33.950000, 25.610000), "African Fish Eagle", "A powerful eagle with a distinct call."),
-            Triple(LatLng(-33.949000, 25.612000), "Greater Flamingo", "A large, pink bird with long legs.")
+            Triple(LatLng(-33.958056, 25.600000), "Downey Woodpacker", "Small penguin found on coastlines.Despite its small size, the Downy Woodpecker can peck up to 16 times per second! It also has special feathers around its nostrils to keep out wood dust."),
+            Triple(LatLng(-33.837793, 25.521485), "Cape Gannet", "Seabird known for spectacular dives.These seabirds can dive from heights of up to 30 meters (98 feet), reaching speeds of up to 100 km/h (62 mph) before hitting the water to catch fish!"),
+            Triple(LatLng(-33.981884, 25.587458), "Kelp Gull", "A scavenger that frequents beaches.Kelp Gulls are expert foragers and can open shellfish by dropping them from great heights onto rocks to crack them open.\n" +
+                    "\n"),
+            Triple(LatLng(-34.010859, 25.665177), "African Fish Eagle", "A powerful eagle with a distinct call. Known as the \"Voice of Africa,\" its call is so distinct that it’s often used as a symbol for African wilderness in movies and media."),
+            Triple(LatLng(-33.949000, 25.612000), "Greater Flamingo", "A large, pink bird with long legs.The pink color of flamingos comes from the pigments in the algae and crustaceans they eat, and the more they eat, the pinker they become!"),
+            Triple(LatLng(-33.938810,  25.552216), "flying pecker", "A large, pink bird with long legs.Woodpeckers have incredibly strong neck muscles that protect them from brain injury when they peck – they can withstand forces up to 1,000 times that of gravity!")
+
+              //  (Google for Developers, 2024)
+
         )
 
         for ((location, name, info) in hotspots) {
@@ -143,14 +147,14 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback {
         val birdName = marker.title
         val birdInfo = marker.snippet
 
-        // Show an AlertDialog with bird information
+        // Show an Dialog with bird information
         AlertDialog.Builder(this)
             .setTitle(birdName)
             .setMessage(birdInfo)
             .setPositiveButton("OK", null)
             .show()
     }
-
+   // creating a function to ge direction from the users location to marker (Google for Developers, 2024)
     private fun getDirectionsToDestination(destination: LatLng) {
         val gmmIntentUri = Uri.parse("google.navigation:q=${destination.latitude},${destination.longitude}")
         val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
@@ -163,14 +167,14 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback {
     //(GeeksforGeeks, 2018)
 
 
-
-
-
 //REFERENCES
 
 //skyshine (2024). how to get current location in google map android. [online] Stack Overflow. Available at: https://stackoverflow.com/questions/21403496/how-to-get-current-location-in-google-map-android [Accessed 27 Sep. 2024].
 // Google for Developers. (2024). Markers. [online] Available at: https://developers.google.com/maps/documentation/android-sdk/marker [Accessed 29 Sep. 2024].
 //GeeksforGeeks (2018). Google Maps in Android. [online] GeeksforGeeks. Available at: https://www.geeksforgeeks.org/google-maps-in-android/ [Accessed 30 Sep. 2024].
+
+//Google for Developers. (2024). Add a map. [online] Available at: https://developers.google.com/maps/documentation/android-sdk/map [Accessed 12 Nov. 2024].
+//
 
 
 

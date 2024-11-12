@@ -1,9 +1,7 @@
 OPSC6312_Intermediate_P.O.E
 -----------------------------------------------------------------------------------
 # Feathered_Friend
- Justin & Sibusiso P.0.E
-----------------------------------------------------------------------------------
-Youtube_Video:https://youtu.be/vrNdNUiA2tc // https://youtu.be/VVCFVUeUOlc?si=x1gPMmdqsGYH-cRB
+ Justin & Sibusiso
 
 ----------------------------------------------------------------------------------
 Overview

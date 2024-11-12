@@ -4,7 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
-    private const val BASE_URL = "https://api.ebird.org/v2/"
+    private const val BASE_URL = " https://api.ebird.org/v2/"
 
     fun create(): EbirdApiService {
         val retrofit = Retrofit.Builder()
@@ -15,5 +15,6 @@ object ApiClient {
         return retrofit.create(EbirdApiService::class.java)
     }
 }
-
+// https://api.ebird.org/v2/
+//https://api.ebird.org/v2/data/obs/{{regionCode}}/recent
 

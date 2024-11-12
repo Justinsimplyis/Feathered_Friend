@@ -1,12 +1,17 @@
 package com.ice_opscpoe.featheredfriends
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
+import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -14,107 +19,147 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.ice_opscpoe.featheredfriends.ApiClient
-import com.ice_opscpoe.featheredfriends.BirdHotspot
-import com.ice_opscpoe.featheredfriends.R
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.google.android.gms.maps.model.CameraPosition
 
-class MapActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapActivity : FragmentActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val LOCATION_PERMISSION_REQUEST_CODE = 1
+    private var lastClickedMarker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
 
-        // Initialize the map fragment
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-
-        // Initialize the location client
+        // Initialize FusedLocationProviderClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-
-        getCurrentLocation()
-
-        //(skyshine, 2024)
+        // Initialize the map fragment and set up the map
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
     }
 
-
-
-    // Implement the onMapReady function
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        getLocationPermission()
+        mMap.uiSettings.isZoomControlsEnabled = true
+        showBirdHotspots()
 
-        // Optionally enable user's location on the map
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED) {
-            mMap.isMyLocationEnabled = true
+        mMap.setOnMarkerClickListener { marker ->
+            if (lastClickedMarker == marker) {
+                getDirectionsToDestination(marker.position)
+                lastClickedMarker = null // Reset to prevent further navigation on single-click
+            } else {
+                displayMarkerInfo(marker)
+                lastClickedMarker = marker
+            }
+            true
         }
-
-
     }
 
-
-    // Get user's current location function
-    private fun getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
-            return
+    private fun getLocationPermission() {
+        // Check if permission is already granted
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            enableMyLocation()
+        } else {
+            // Request location permission
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
         }
+    }
 
+    private fun enableMyLocation() {
+        // Ensure permissions are granted before enabling location
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            mMap.isMyLocationEnabled = true
+            zoomToUserLocation()
+        }
+    }
 
-        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-            if (location != null) {
-                val currentLatLng = LatLng(location.latitude, location.longitude)
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+    @SuppressLint("MissingSuperCall")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        // Check if the location permission was granted
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            enableMyLocation()
+        } else {
+            Toast.makeText(this, "Location permission is required to show your current location.", Toast.LENGTH_LONG).show()
+        }
+    }
 
-                // Fetch nearby bird hotspots once location is available
-                getNearbyHotspots(location.latitude, location.longitude)
+    private fun zoomToUserLocation() {
+        // Check for location permission before accessing last location
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    val userLatLng = LatLng(location.latitude, location.longitude)
+                    val cameraPosition = CameraPosition.Builder()
+                        .target(userLatLng)
+                        .zoom(12f)
+                        .build()
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+                } else {
+                    Toast.makeText(this, "Unable to get current location", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
-    //(skyshine, 2024)
 
+    private fun showBirdHotspots() {
+        val hotspots = listOf(
+            Triple(LatLng(-33.958056, 25.600000), "African Penguin", "Small penguin found on coastlines."),
+            Triple(LatLng(-33.956521, 25.602222), "Cape Gannet", "Seabird known for spectacular dives."),
+            Triple(LatLng(-33.953891, 25.605139), "Kelp Gull", "A scavenger that frequents beaches."),
+            Triple(LatLng(-33.950000, 25.610000), "African Fish Eagle", "A powerful eagle with a distinct call."),
+            Triple(LatLng(-33.949000, 25.612000), "Greater Flamingo", "A large, pink bird with long legs.")
+        )
 
-
-    private fun getNearbyHotspots(lat: Double, lng: Double) {
-        val apiService = ApiClient.create()
-
-
-        val apiKey = "s22a442fd3kc" //API key for mibird
-
-        // Call the function and pass the apiKey
-        apiService.getNearbyHotspots(lat, lng, apiKey)
-            .enqueue(object : Callback<List<BirdHotspot>> {
-                override fun onResponse(call: Call<List<BirdHotspot>>, response: Response<List<BirdHotspot>>) {
-                    if (response.isSuccessful && response.body() != null) {
-                        val hotspots = response.body()
-                        if (hotspots != null && hotspots.isNotEmpty()) {
-                            for (hotspot in hotspots) {
-                                val hotspotLocation = LatLng(hotspot.lat, hotspot.lng)
-                                mMap.addMarker(MarkerOptions().position(hotspotLocation).title(hotspot.locName))
-                            }
-                        } else {
-                            Toast.makeText(this@MapActivity, "No bird hotspots found nearby.", Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        Toast.makeText(this@MapActivity, "Failed to retrieve bird hotspots.", Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-                override fun onFailure(call: Call<List<BirdHotspot>>, t: Throwable) {
-                    Toast.makeText(this@MapActivity, "Error: ${t.message}", Toast.LENGTH_LONG).show()
-                }
-            })
+        for ((location, name, info) in hotspots) {
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(location)
+                    .title(name)
+                    .snippet(info)
+            )
+        }
     }
+
+    private fun displayMarkerInfo(marker: Marker) {
+        val birdName = marker.title
+        val birdInfo = marker.snippet
+
+        // Show an AlertDialog with bird information
+        AlertDialog.Builder(this)
+            .setTitle(birdName)
+            .setMessage(birdInfo)
+            .setPositiveButton("OK", null)
+            .show()
+    }
+
+    private fun getDirectionsToDestination(destination: LatLng) {
+        val gmmIntentUri = Uri.parse("google.navigation:q=${destination.latitude},${destination.longitude}")
+        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+        mapIntent.setPackage("com.google.android.apps.maps")
+        if (mapIntent.resolveActivity(packageManager) != null) {
+            startActivity(mapIntent)
+        }
+    }
+}
     //(GeeksforGeeks, 2018)
 
 
@@ -129,4 +174,4 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
 
-}
+

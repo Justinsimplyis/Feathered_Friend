@@ -48,6 +48,8 @@ class RegisterActivity : AppCompatActivity() {
 
             if (usernameText.isEmpty() || passwordText.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            } else if (!isValidEmail(usernameText)) { // Email format check
+                Toast.makeText(this, "Please enter a valid email format", Toast.LENGTH_SHORT).show()
             } else if (passwordText.length < 6) { // Password length check
                 Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
             } else {
@@ -59,6 +61,10 @@ class RegisterActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
+    }
+    private fun isValidEmail(email: String): Boolean {
+        val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+        return email.matches(emailPattern.toRegex())
     }
 
     private fun registerWithFirebase(email: String, password: String) {

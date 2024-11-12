@@ -23,6 +23,7 @@ ________________________
 - Themes
 - Notifications
 - Shared Preference
+- Firebase
 
 -----------------------------
 VIDEO LINK

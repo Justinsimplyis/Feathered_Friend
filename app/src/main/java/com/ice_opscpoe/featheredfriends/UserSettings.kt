@@ -11,6 +11,8 @@ class UserSettings : Application() {
         const val CUSTOM_THEME = "customTheme"
         const val LIGHT_THEME = "lightTheme"
         const val DARK_THEME = "darkTheme"
+        const val NOTIFICATIONS_ENABLED = "notificationsEnabled"
+
 
         fun initializeTheme(context: Context) {
             val sharedPrefs = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
@@ -31,9 +33,22 @@ class UserSettings : Application() {
             return sharedPrefs.getString(CUSTOM_THEME, LIGHT_THEME) == DARK_THEME
         }
 
+        fun saveNotificationPreference(context: Context, isEnabled: Boolean) {
+            val editor = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit()
+            editor.putBoolean(NOTIFICATIONS_ENABLED, isEnabled)
+            editor.apply()
+        }
+
+        fun isNotificationsEnabled(context: Context): Boolean {
+            val sharedPrefs = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+            return sharedPrefs.getBoolean(NOTIFICATIONS_ENABLED, true) // Default is enabled
+        }
     }
+
     override fun onCreate() {
         super.onCreate()
         initializeTheme(this)
     }
 }
+//Reference List
+//CodeWithCal. 2021. Save Settings in Shared Preference Android Studio.[Youtube]. Available at: https://www.youtube.com/watch?v=-u63b5X2NqE. [Accessed 1 November 2024]

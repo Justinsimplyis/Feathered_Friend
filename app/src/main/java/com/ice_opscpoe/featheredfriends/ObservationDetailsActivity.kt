@@ -1,5 +1,6 @@
 package com.ice_opscpoe.featheredfriends
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -24,6 +25,7 @@ class ObservationDetailsActivity : AppCompatActivity() {
     private lateinit var dbHelper: DBHelper
     private var observationId: Int = -1
     private var userId: Int = -1
+    private var uniqueSpeciesCount: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +45,8 @@ class ObservationDetailsActivity : AppCompatActivity() {
         deleteObservationButton = findViewById(R.id.deleteObservationButton)
         backArrow = findViewById(R.id.backArrow)
 
+        uniqueSpeciesCount = intent.getIntExtra("uniqueSpeciesCount", 0)
+
         dbHelper = DBHelper(this)
 
         observationId = intent.getIntExtra("observationId", -1)
@@ -53,6 +57,8 @@ class ObservationDetailsActivity : AppCompatActivity() {
         }
 
         backArrow.setOnClickListener {
+            val homeIntent = Intent(this, HomeActivity::class.java)
+            homeIntent.putExtra("uniqueSpeciesCount", uniqueSpeciesCount)
             finish()
         }
 
@@ -123,12 +129,25 @@ class ObservationDetailsActivity : AppCompatActivity() {
             .setMessage("Are you sure you want to delete this observation?")
             .setPositiveButton("Yes") { _, _ ->
                 dbHelper.deleteObservation(observationId)
+                decrementObservationCount()
                 Toast.makeText(this, "Observation deleted successfully", Toast.LENGTH_SHORT).show()
-                finish() // Go back to the previous activity
+
+
+                val observationsIntent = Intent(this, ObservationsActivity::class.java)
+                observationsIntent.putExtra("uniqueSpeciesCount", uniqueSpeciesCount)
+                observationsIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(observationsIntent)
+                finish()
             }
             .setNegativeButton("No", null)
             .create()
         dialog.show()
+    }
+    private fun decrementObservationCount() {
+        if (uniqueSpeciesCount > 0) {
+            uniqueSpeciesCount--
+            Toast.makeText(this, "Progress decremented!", Toast.LENGTH_SHORT).show()
+        }
     }
 }
 //Reference list

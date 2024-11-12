@@ -21,13 +21,13 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var themeSwitch: Switch
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var saveLoginSwitch: Switch
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var notificationSwitch: Switch
 
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        UserSettings.initializeTheme(this)
         enableEdgeToEdge()
 
         setContentView(R.layout.activity_settings)
@@ -48,18 +48,16 @@ class SettingsActivity : AppCompatActivity() {
         themeSwitch.isChecked = UserSettings.isDarkMode(this)
 
         loadSettings()
-        // this Loads saved notification preference
+
+        // Load the saved notification preference
         val isNotificationsEnabled = sharedPreferences.getBoolean("notificationsEnabled", true)
         notificationSwitch.isChecked = isNotificationsEnabled
 
-        // Save the preference when the switch is toggled
         notificationSwitch.setOnCheckedChangeListener { _, isChecked ->
             val editor = sharedPreferences.edit()
             editor.putBoolean("notificationsEnabled", isChecked)
             editor.apply()
         }
-
-
         navHome.setOnClickListener {
             startActivity(Intent(this, HomeActivity::class.java))
         }
@@ -113,15 +111,15 @@ class SettingsActivity : AppCompatActivity() {
     private fun logout() {
         val editor = sharedPreferences.edit()
         if (!saveLoginSwitch.isChecked) {
+
             clearLoginInfo()
             Toast.makeText(this, "All data cleared on logout", Toast.LENGTH_SHORT).show()
         } else {
+
+            editor.putBoolean("isLoggedOut", true)
             Toast.makeText(this, "Logged out successfully, login info is saved", Toast.LENGTH_SHORT).show()
         }
-
-        editor.putBoolean("isLoginSaved", saveLoginSwitch.isChecked) // Updates the saved state
         editor.apply()
-
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
@@ -129,3 +127,6 @@ class SettingsActivity : AppCompatActivity() {
 //Reference List
 //Coding Meet. 2023. How to Handle Light Mode or Dark Mode Theme app in Android Studio Kotlin. [Youtube] https://www.youtube.com/watch?v=UVeki-FKH8c. [Accessed on 28 September 2024]
 //Tutorials Point. 2024. Android - Session Management. [Online] https://www.tutorialspoint.com/android/android_session_management.htm. [Accessed on 28 September 2024]
+//Android Developers. 2024. Save simple data with SharedPreferences. [Online]. Available at: https://developer.android.com/training/data-storage/shared-preferences. [Accesesed at 1 November 2024]
+//100bit Coding. 2023. Notifications in Android [Kotlin] | Android Studio. [Youtube] Available at: https://youtu.be/Kan_5OeSBN0. [Accessed 1 November 2024]
+//Android Developers. 2024. Notification runtime permission. [Online] Available at: https://developer.android.com/develop/ui/views/notifications/notification-permission. [Accessed 1 November 2024]

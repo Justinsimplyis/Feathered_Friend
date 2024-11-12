@@ -2,6 +2,7 @@ package com.ice_opscpoe.featheredfriends
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -22,6 +23,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var dbHelper: DBHelper
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +32,7 @@ class LoginActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
         dbHelper = DBHelper(this)
+        sharedPreferences = getSharedPreferences("userPrefs", MODE_PRIVATE)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -42,12 +45,26 @@ class LoginActivity : AppCompatActivity() {
         loginButton = findViewById(R.id.loginButton)
         registerPrompt = findViewById(R.id.registerPrompt)
 
+        val sharedPreferences = getSharedPreferences("userPrefs", Context.MODE_PRIVATE)
+
+        val isLoggedOut = sharedPreferences.getBoolean("isLoggedOut", false)
+        val isLoginSaved = sharedPreferences.getBoolean("isLoginSaved", false)
+
+        if (!isLoggedOut && isLoginSaved) {
+            val savedUsername = sharedPreferences.getString("username", null)
+            val savedPassword = sharedPreferences.getString("password", null)
+            if (!savedUsername.isNullOrEmpty() && !savedPassword.isNullOrEmpty()) {
+                loginWithFirebase(savedUsername, savedPassword)
+            }
+        }
         loginButton.setOnClickListener {
             val usernameText = username.text.toString()
             val passwordText = password.text.toString()
 
             if (usernameText.isEmpty() || passwordText.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            } else if (passwordText.length < 6) {
+                Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
             } else {
                 loginWithFirebase(usernameText, passwordText)
             }
@@ -65,16 +82,21 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val user = firebaseAuth.currentUser
                     val firebaseUserId = user?.uid ?: ""
-                    val usernameText = email // Using email as the username for simplicity.
+                    val usernameText = email
 
                     if (dbHelper.checkUser(usernameText)) {
                         dbHelper.updateFirebaseUid(usernameText, firebaseUserId)
                     } else {
-                        // If user does not exist, insert the user into the local database
                         dbHelper.addUser(usernameText, firebaseUserId)
                     }
 
                     Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+
+                    // Save login info if the save login option was enabled
+                    if (sharedPreferences.getBoolean("isLoginSaved", false)) {
+                        saveLoginInfo(email, password)
+                    }
+
                     startActivity(Intent(this, HomeActivity::class.java))
                     finish()
                 } else {
@@ -82,7 +104,16 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
     }
+
+    private fun saveLoginInfo(username: String, password: String) {
+        val editor = sharedPreferences.edit()
+        editor.putString("username", username)
+        editor.putString("password", password)
+        editor.putBoolean("isLoginSaved", true)
+        editor.apply()
+    }
 }
+
 
 //Reference List
 //Android Knowledge. 2023. Login and Sign-Up using SQLite in Android Studio| Kotlin .[Youtube]https://www.youtube.com/watch?v=zz659HPTe6M. [Accessed on 13 September 2024]

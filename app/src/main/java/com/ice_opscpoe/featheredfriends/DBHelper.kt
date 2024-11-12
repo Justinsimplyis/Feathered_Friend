@@ -32,7 +32,6 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         const val COLUMN_USER_ID_FK = "user_id" // Linked to user ID
     }
 
-    private val firestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(db: SQLiteDatabase) {
         // Create users table with Firebase UID

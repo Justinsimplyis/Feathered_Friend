@@ -18,3 +18,5 @@ data class Observation(
     val date: String,
     val location: String
 )
+
+
